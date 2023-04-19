@@ -37,7 +37,7 @@ class CustomUserCreationForm(UserCreationForm):
     )
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        field = ('username', 'email', 'password1', 'password2',)
+        fields = ('username', 'email', 'password1', 'password2',)
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -60,4 +60,4 @@ class CustomAuthenticationForm(AuthenticationForm):
     )
     class Meta(AuthenticationForm):
         model = get_user_model()
-        field = ('username','password',)
+        fields = ('username','password',)
