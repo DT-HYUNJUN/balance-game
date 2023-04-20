@@ -3,6 +3,22 @@
 {% block content %}
 <a href="{% url 'posts:index' %}">home</a>
 {{ post.select1_content }} vs {{ post.select2_content }}
-{{ post.select1_content }}
-{{ post.select2_content }}
+
+{% if user in post.select1_users.all or user in post.select2_users.all  %}
+
+<input type="submit" value="{{ post.select1_content }} {{post.select1_users.all|length}}" disabled> 
+<input type="submit" value="{{ post.select2_content }} {{post.select2_users.all|length}}" disabled>
+
+{% else %}
+<form action="{% url 'posts:answer' post.pk post.select1_content %}" method = "POST">
+    {% csrf_token %}
+    <input type="submit" value="{{ post.select1_content }}">
+</form>
+
+<form action="{% url 'posts:answer' post.pk post.select2_content %}" method = "POST">
+    {% csrf_token %}
+    <input type="submit" value="{{ post.select2_content }}">
+</form>
+{% endif %}
+
 {% endblock content %}

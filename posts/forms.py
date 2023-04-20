@@ -33,6 +33,7 @@ class PostForm(forms.ModelForm):
                 'class': 'form-control',
             }
         ),
+        required=False
     )
     image2 = forms.ImageField(
         widget=forms.FileInput(
@@ -40,6 +41,7 @@ class PostForm(forms.ModelForm):
                 'class': 'form-control',
             }
         ),
+        required=False
     )
     class Meta:
         model = Post
