@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 import os
 from django.conf import settings
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 # Create your models here.
 
@@ -9,6 +11,7 @@ from django.conf import settings
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
+    content = models.TextField()
     select1_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='select1_posts')
     select1_content = models.CharField(max_length=100)
     select2_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='select2_posts')
@@ -39,6 +42,22 @@ class Post(models.Model):
                 if old_review.image2:
                     os.remove(os.path.join(settings.MEDIA_ROOT, old_review.image2.name))
         super(Post, self).save(*args, **kwargs)
+    
+    @property
+    def created_string(self):
+        time = datetime.now(tz=timezone.utc) - self.created_at
+
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(int(time.seconds / 60)) + '분 전'
+        elif time < timedelta(days=1):
+            return str(int(time.seconds / 3600)) + '시간 전'
+        elif time < timedelta(days=7):
+            time = datetime.now(tz=timezone.utc).date() - self.created_at.date()
+            return str(time.days) + '일 전'
+        else:
+            return self.strftime('%Y-%m-%d')
 
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

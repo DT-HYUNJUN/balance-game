@@ -11,6 +11,14 @@ class PostForm(forms.ModelForm):
             }
         ),
     )
+    content = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '설명을 입력하세요'
+            }
+        )
+    )
     select1_content = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -45,7 +53,7 @@ class PostForm(forms.ModelForm):
     )
     class Meta:
         model = Post
-        fields = ('title', 'select1_content', 'image1', 'select2_content', 'image2',)
+        fields = ('title', 'content', 'select1_content', 'image1', 'select2_content', 'image2',)
         
         
 class CommentForm(forms.ModelForm):

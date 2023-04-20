@@ -1,0 +1,11 @@
+.select-img {
+  height: 200px;
+}
+
+/* .mouse {
+  width: 26rem;
+} */
+
+.mouse:hover {
+  box-shadow: 5px 5px 10px 1px red !important;
+}
