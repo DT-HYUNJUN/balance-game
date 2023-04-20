@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a href="{% url 'posts:index' %}">home</a>
+{{ post.select1_content }} vs {{ post.select2_content }}
+{{ post.select1_content }}
+{{ post.select2_content }}
+{% endblock content %}
