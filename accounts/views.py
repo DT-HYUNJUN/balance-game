@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth import get_user_model
 # Create your views here.
 
 def signup(request):
@@ -45,3 +45,22 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('posts:index')
+
+def profile(request, username):
+    User = get_user_model()
+    person = User.objects.get(username=username)
+    context = {
+        'person': person,
+    }
+    return render(request,'accounts/profile.html', context)
+
+def follow(request,username):
+    User = get_user_model()
+    you = User.objects.get(username=username)
+    me = request.user
+    if you != me:
+        if you.followers.filter(username=request.user.username).exists():
+            you.followers.remove(me)
+        else:
+            you.followers.add(me)
+    return redirect('accounts:profile', you.username)

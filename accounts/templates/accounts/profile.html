@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ person.username }}Page
+
+팔로워 : {{person.followers.all|length}}
+팔로잉 : {{person.followings.all|length}}
+
+{% if request.user != person %}
+  <form action="{% url 'accounts:follow' person.username %}" method="POST">
+  {% csrf_token %}
+  {% if request.user in person.followers.all %}
+    <input type="submit" value="unfollow">
+  {% else %}
+    {% if request.user.is_authenticated %}
+      <input type="submit" value="follow">
+    {% else %}
+      <input type="submit" value="follow" disabled>
+    {% endif %}
+  {% endif %}
+  </form>
+{% endif %}
+
+{% endblock content %}

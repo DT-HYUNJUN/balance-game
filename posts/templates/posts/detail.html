@@ -2,6 +2,7 @@
 
 {% block content %}
 <a href="{% url 'posts:index' %}">home</a>
+<a href="{% url 'accounts:profile' post.user.username %}" >{{post.user.username}}</a>
 {{ post.select1_content }} vs {{ post.select2_content }}
 
 {% if user in post.select1_users.all or user in post.select2_users.all  %}
