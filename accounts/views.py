@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, CustomUserChangeForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, CustomUserChangeForm, CustomPasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.contrib.auth import update_session_auth_hash
 # Create your views here.
 
 def signup(request):
@@ -56,6 +57,22 @@ def update(request):
     }
     return render(request, 'accounts/update.html', context)
 
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return redirect('accounts:profile', request.user)
+
+    else:
+        form = CustomPasswordChangeForm(request.user)
+    context = {
+        'form': form,
+    }
+    return render(request, 'accounts/password_change.html', context)
 
 @login_required
 def delete(request):

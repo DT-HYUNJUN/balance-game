@@ -3,6 +3,7 @@
 {% block content %}
 
 <a class="btn btn-secondary" href="{% url 'accounts:update' %}">수정</a>
+<a class="btn btn-secondary" href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
 <a class="btn btn-danger" href="{% url 'accounts:delete' %}">회원탈퇴</a>
 
 {{ person.username }}Page
