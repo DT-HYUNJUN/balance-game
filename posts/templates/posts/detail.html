@@ -20,7 +20,7 @@
     <input type="submit" value="{{ post.select2_content }}">
 </form>
 {% endif %}
-<form action="{% url 'posts:likes' post.pk%}" method="POST">
+<form action="{% url 'posts:likes' post.pk %}" method="POST">
   {% csrf_token %}
   {% if request.user in post.like_users.all %}
   <input type="submit" value="좋아요 취소">
