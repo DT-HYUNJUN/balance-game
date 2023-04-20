@@ -11,14 +11,31 @@
 
 {% else %}
 <form action="{% url 'posts:answer' post.pk post.select1_content %}" method = "POST">
-    {% csrf_token %}
-    <input type="submit" value="{{ post.select1_content }}">
+  {% csrf_token %}
+  <input type="submit" value="{{ post.select1_content }}">
+
 </form>
 
 <form action="{% url 'posts:answer' post.pk post.select2_content %}" method = "POST">
-    {% csrf_token %}
-    <input type="submit" value="{{ post.select2_content }}">
+  {% csrf_token %}
+  <input type="submit" value="{{ post.select2_content }}">
 </form>
 {% endif %}
+
+<span>댓글 {{ comments|length }}</span>
+
+<form action="{% url 'posts:comment_create' post.pk %}" method="POST">
+  {% csrf_token %}
+  {% for field in comment_form %}
+    <div class="input-group mb-3">
+      {{ field }}
+    </div>
+    {% endfor %}
+  <input type="submit" value="등록">
+</form>
+
+{% for comment in comments %}
+  <p>{{ comment.user }} - {{ comment.content }}</p>
+{% endfor %}
 
 {% endblock content %}

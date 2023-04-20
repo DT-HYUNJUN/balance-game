@@ -28,7 +28,7 @@ class PostForm(forms.ModelForm):
         ),
     )
     image1 = forms.ImageField(
-        widget=forms.FileInput(
+        widget=forms.ClearableFileInput(
             attrs={
                 'class': 'form-control',
             }
@@ -36,7 +36,7 @@ class PostForm(forms.ModelForm):
         required=False
     )
     image2 = forms.ImageField(
-        widget=forms.FileInput(
+        widget=forms.ClearableFileInput(
             attrs={
                 'class': 'form-control',
             }
@@ -46,3 +46,17 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'select1_content', 'image1', 'select2_content', 'image2',)
+        
+        
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '댓글을 입력해보세요',
+            }
+        ),
+    )
+    class Meta:
+        model = Comment
+        fields = ('content',)
