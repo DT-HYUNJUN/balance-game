@@ -11,6 +11,6 @@
 </form>
 
 {% for post in posts %}
-    {{ post.title }}
+<a href="{% url 'posts:detail' post.pk%}">{{ post.title }}</a>
 {% endfor %}
 {% endblock content %}
