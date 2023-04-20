@@ -2,7 +2,14 @@
 
 {% block content %}
 
+<a class="btn btn-secondary" href="{% url 'accounts:update' %}">수정</a>
+<a class="btn btn-danger" href="{% url 'accounts:delete' %}">회원탈퇴</a>
+
 {{ person.username }}Page
+
+<p>{{ person.email }}</p>
+
+<p>{{ person.last_name }}</p>
 
 팔로워 : {{person.followers.all|length}}
 팔로잉 : {{person.followings.all|length}}

@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth import get_user_model
 from django import forms
 
@@ -16,6 +16,14 @@ class CustomUserCreationForm(UserCreationForm):
             attrs={
                 'class': 'form-control',
                 'placeholder': '이메일'
+            }
+        ),
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '이름',
             }
         ),
     )
@@ -37,7 +45,7 @@ class CustomUserCreationForm(UserCreationForm):
     )
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = ('username', 'email', 'password1', 'password2',)
+        fields = ('username', 'email', 'last_name', 'password1', 'password2',)
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -61,3 +69,25 @@ class CustomAuthenticationForm(AuthenticationForm):
     class Meta(AuthenticationForm):
         model = get_user_model()
         fields = ('username','password',)
+        
+class CustomUserChangeForm(UserChangeForm):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '이메일',
+            }
+        ),
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '이름',
+            }
+        ),
+    )
+    password = None
+    class Meta(UserChangeForm.Meta):
+        model = get_user_model()
+        fields= ('email', 'last_name',)
