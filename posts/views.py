@@ -75,3 +75,29 @@ def comment_create(request, post_pk):
         form.save()
         return redirect('posts:detail', post_pk)
     detail(request, post_pk)
+
+@login_required
+def update(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.user == post.user:
+        if request.method == 'POST':
+            form = PostForm(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                form.save()
+                return redirect('posts:detail', post.pk)
+        else:
+            form = PostForm(instance=post)
+    else:
+        return redirect('posts:detail', post.pk)
+    context = {
+        'post' : post,
+        'form' : form,
+    }
+    return render(request, 'posts/update.html', context)
+
+@login_required
+def delete(request,post_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.user == post.user:
+        post.delete()
+    return redirect('posts:index')
