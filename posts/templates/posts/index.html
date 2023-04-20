@@ -6,8 +6,8 @@
 <a href="{% url 'accounts:signup' %}">회원가입</a>
 <a href="{% url 'posts:create' %}">글 작성</a>
 <form action="{% url 'accounts:logout' %}" method="POST">
-    {% csrf_token %}
-    <input type="submit" value="로그아웃">
+  {% csrf_token %}
+  <input type="submit" value="로그아웃">
 </form>
 
 {% for post in posts %}

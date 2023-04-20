@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from .models import Post, Comment
 from django.contrib.auth.decorators import login_required
 
@@ -11,6 +11,7 @@ def index(request):
         'posts': posts,
     }
     return render(request, 'posts/index.html', context)
+
 
 @login_required
 def create(request):
@@ -32,10 +33,15 @@ def create(request):
 
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
+    comments = post.comment_set.all()
+    comment_form = CommentForm()
     context = {
+        'comments': comments,
         'post': post,
+        'comment_form': comment_form,
     }
     return render(request, 'posts/detail.html', context)
+
 
 @login_required
 def answer(request, post_pk, answer):
@@ -47,7 +53,8 @@ def answer(request, post_pk, answer):
         post.select2_users.add(request.user)
 
     return redirect('posts:detail', post.pk)
-    
+
+
 
 def likes(request, post_pk):
     post = Post.objects.get(pk=post_pk)
@@ -56,3 +63,15 @@ def likes(request, post_pk):
     else:
         post.like_users.add(request.user)
     return redirect('posts:detail', post.pk)
+
+@login_required
+def comment_create(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.post = post
+        form.save()
+        return redirect('posts:detail', post_pk)
+    detail(request, post_pk)
