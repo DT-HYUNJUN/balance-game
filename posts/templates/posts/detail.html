@@ -48,7 +48,16 @@
 </form>
 
 {% for comment in comments %}
-  <p>{{ comment.user }} - {{ comment.content }}</p>
+  <div class="d-flex align-items-center">
+    <span>{{ comment.user }} - {{ comment.content }}</span>
+    {% if request.user == comment.user %}
+    <form action="{% url 'posts:comment_delete' post.pk comment.pk %}" method="POST">
+      {% csrf_token %}
+      <input class="border-0 bg-transparent text-danger" type="submit" value="X">
+    </form>
+    {% endif %}
+  </div>
+
 {% endfor %}
 
 {% endblock content %}

@@ -55,7 +55,6 @@ def answer(request, post_pk, answer):
     return redirect('posts:detail', post.pk)
 
 
-
 def likes(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     if request.user in post.like_users.all():
@@ -63,6 +62,7 @@ def likes(request, post_pk):
     else:
         post.like_users.add(request.user)
     return redirect('posts:detail', post.pk)
+
 
 @login_required
 def comment_create(request, post_pk):
@@ -75,6 +75,15 @@ def comment_create(request, post_pk):
         form.save()
         return redirect('posts:detail', post_pk)
     detail(request, post_pk)
+    
+
+@login_required
+def comment_delete(request, post_pk, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+    if comment.user == request.user:
+        comment.delete()
+    return redirect('posts:detail', post_pk)
+
 
 @login_required
 def update(request, post_pk):
@@ -94,6 +103,7 @@ def update(request, post_pk):
         'form' : form,
     }
     return render(request, 'posts/update.html', context)
+
 
 @login_required
 def delete(request,post_pk):
