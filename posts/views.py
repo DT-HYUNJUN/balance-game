@@ -55,6 +55,15 @@ def answer(request, post_pk, answer):
     return redirect('posts:detail', post.pk)
 
 
+
+def likes(request, post_pk):
+    post = Post.objects.get(pk=post_pk)
+    if request.user in post.like_users.all():
+        post.like_users.remove(request.user)
+    else:
+        post.like_users.add(request.user)
+    return redirect('posts:detail', post.pk)
+
 @login_required
 def comment_create(request, post_pk):
     post = Post.objects.get(pk=post_pk)
