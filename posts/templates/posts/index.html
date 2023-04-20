@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<a href="{% url 'accounts:profile' user.username %}">{{ user }}</a>
 
 <a href="{% url 'accounts:login' %}">로그인</a>
 <a href="{% url 'accounts:signup' %}">회원가입</a>
