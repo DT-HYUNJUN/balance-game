@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, CustomUserChangeForm, CustomPasswordChangeForm
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
@@ -94,6 +95,8 @@ def profile(request, username):
     }
     return render(request,'accounts/profile.html', context)
 
+
+@login_required
 def follow(request,username):
     User = get_user_model()
     you = User.objects.get(username=username)
@@ -101,6 +104,14 @@ def follow(request,username):
     if you != me:
         if you.followers.filter(username=request.user.username).exists():
             you.followers.remove(me)
+            is_followed = False
         else:
             you.followers.add(me)
+            is_followed = True
+        context = {
+            'is_followed': is_followed,
+            'followings_count': you.followings.count(),
+            'followers_count': you.followers.count(),
+        }
+        return JsonResponse(context)
     return redirect('accounts:profile', you.username)

@@ -9,10 +9,10 @@
 }
 
 .content {
-  /* position-absolute top-100 start-50 translate-middle */
-  background-color: black;
-  color: white;
   position: absolute;
+  background-color: #F44336;
+  color: #ffffff;
+  text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0px -3px 20px rgba(255,255,255,0.4);
   top: 80%;
   left: 50%;
   transform : translate(-50%, -50%);

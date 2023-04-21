@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="{% url 'accounts:update' %}" method="POST" enctype="multipart/form-data">
+
+<div class="account-form mx-auto">
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="#">회원정보 변경</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
+    </li>
+  </ul>
+  
+  <form class="" action="{% url 'accounts:update' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}
       <div class="input-group mb-3">
@@ -12,4 +23,6 @@
       <button class="btn btn-primary" type="submit">수정</button>
     </div>
   </form>
+</div>
+
 {% endblock content %}

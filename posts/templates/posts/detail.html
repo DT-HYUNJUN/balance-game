@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block content %}
@@ -52,10 +53,18 @@
     {% if user in post.select1_users.all or user in post.select2_users.all  %}
     <div class="progress-stacked bar mx-auto mb-3" style="height: 30px;">
       <div class="progress" role="progressbar" aria-label="Segment one" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ res1 }}%; height: 30px;">
-        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated fs-5">{{ post.select1_users.all|length }} ({{ res1 }}) %</div>
+        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated fs-5 w-100">
+          <a class="border-0 bg-transparent p-0 text-white" data-bs-toggle="offcanvas" href="#left" role="button" aria-controls="offcanvasExample">
+            {{ post.select1_users.all|length }} ({{ res1 }}) %
+          </a>
+        </div>
       </div>
       <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ res2 }}%; height: 30px;">
-        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated fs-5">{{ post.select2_users.all|length }} ({{ res2 }}) %</div>
+        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated fs-5">
+          <a class="border-0 -transparent p-0 text-white" data-bs-toggle="offcanvas" href="#right" role="button" aria-controls="offcanvasExample">
+            {{ post.select2_users.all|length }} ({{ res2 }}) %
+          </a>
+        </div>
       </div>
     </div>
     {% endif %}
@@ -65,12 +74,12 @@
         {% if post.image1 %}
         <button id="select" {% if user in post.select2_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{{ post.image1.url }}" alt="">
-          <span class="content">{{ post.select1_content }}</span>
+          <span class="content z-3">{{ post.select1_content }}</span>
         </button>
         {% else %}
         <button id="select" {% if user in post.select2_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{% static 'img/no-image.png' %}" alt="">
-          <span class="content">{{ post.select1_content }}</span>
+          <span class="content z-3">{{ post.select1_content }}</span>
         </button>
         {% endif %}
       </form>
@@ -80,12 +89,12 @@
         {% if post.image2 %}
         <button {% if user in post.select1_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{{ post.image2.url }}" alt="">
-          <span class="content">{{ post.select2_content }}</span>
+          <span class="content z-3">{{ post.select2_content }}</span>
         </button>
         {% else %}
         <button {% if user in post.select1_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{% static 'img/no-image.png' %}" alt="">
-          <span class="content">{{ post.select2_content }}</span>
+          <span class="content z-3">{{ post.select2_content }}</span>
         </button>
         {% endif %}
       </form>
@@ -94,7 +103,7 @@
   </div>
 
   <p class="mb-2 fs-5">댓글 ({{ comments|length }})</p>
-  
+
   <form action="{% url 'posts:comment_create' post.pk %}" method="POST">
     {% csrf_token %}
     {% for field in comment_form %}
@@ -102,9 +111,9 @@
         {{ field }}
         <button class="btn btn-outline-primary">등록</button>
       </div>
-      {% endfor %}
+    {% endfor %}
   </form>
-  
+
   {% for comment in comments %}
     <div class="d-flex align-items-center justify-content-between">
       <span>{{ comment.user }} - {{ comment.content }}</span>
@@ -119,9 +128,30 @@
         {% endif %}
       </div>
     </div>
-  
   {% endfor %}
-
 </div>
 
+<div class="offcanvas offcanvas-start" tabindex="-1" id="left" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ post.select1_content }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    {% for select1_person in post.select1_users.all %}
+    <p><a href="{% url 'accounts:profile' select1_person.username %}">{{ select1_person }}</a></p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="right" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ post.select2_content }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    {% for select2_person in post.select2_users.all %}
+      <p><a href="{% url 'accounts:profile' select2_person.username %}">{{ select2_person }}</a></p>
+    {% endfor %}
+  </div>
+</div>
 {% endblock content %}

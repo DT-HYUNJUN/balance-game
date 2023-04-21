@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from .forms import PostForm, CommentForm
 from .models import Post, Comment
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 
 
 # Create your views here.
@@ -41,9 +42,11 @@ def create(request):
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comments = post.comment_set.all()
-    
+    User = get_user_model()
+    people = User.objects.all()
     comment_form = CommentForm()
     context = {
+        'people': people,
         'res1': post.select1_count(),
         'res2': post.select2_count(),
         'comments': comments,
