@@ -79,64 +79,65 @@
 
 
 {% block content %}
-<div class='d-flex flex-column align-items-center pt-5'>
-  <!--프로필 이미지-->
-  <div class="profile-image rounded-circle mb-2">
-    {% if person.profile_image %}
-      <img src="{{ person.profile_image.url }}" alt="profile_image" class="object-fit-fill profile">
-    {% else %}
-      <img src="{% static 'img/img-profile-none-bg.png' %}" alt="profile_image_none" class="profile">
-    {% endif %}
-  </div>
+  <div class='d-flex flex-column align-items-center pt-5'>
+    <!--프로필-->
+    <div class="profile-image rounded-circle mb-2">
+      {% if person.profile_image %}
+        <img src="{{ person.profile_image.url }}" alt="profile_image" class="object-fit-fill profile">
+      {% else %}
+        <img src="{% static 'img/img-profile-none-bg.png' %}" alt="profile_image_none" class="profile">
+      {% endif %}
+    </div>
 
-  <a class="btn btn-secondary" href="{% url 'accounts:update' %}">수정</a>
-  <a class="btn btn-secondary" href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
+    <a class="btn btn-secondary" href="{% url 'accounts:update' %}">수정</a>
+    <a class="btn btn-secondary" href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
 
-  <div class="mt-5">
-    <table id="detail" class="table">    
-      <tbody>
-        <tr>
-          <th scope="row">유저 이름</th>
-          <td>{{ person.username }}</td>
-        </tr>
-        <tr>
-          <th scope="row">이메일</th>
-          <td>{{ person.email }}</td>
-        </tr>
-        <tr>
-          <th scope="row">성</th>
-          <td>{{ person.last_name }}</td>
-        </tr>
-        <tr>
-          <th scope="row">이름</th>
-          <td>{{ person.first_name }}</td>
-        </tr>
-        <tr>
-          <th scope="row">생년월일</th>
-          <td>{{ person.birthday }}</td>
-        </tr>
-        <tr>
-          <th scope="row">마지막 로그인</th>
-          <td>{{ person.last_login }}</td>
-        </tr>
-        <tr>
-          <th scope="row">가입일</th>
-          <td>{{ person.date_joined }}</td>
-        </tr>
-        <tr>
-          <td class="border-0"></td>
-          <td class="border-0">
-            <div class="text-end">
-              {% if user == person %}
-              <form action="{% url 'accounts:delete' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">회원탈퇴</button>
-              </form>
-              {% endif %}
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="mt-5">
+      <table id="detail" class="table">    
+        <tbody>
+          <tr>
+            <th scope="row">유저 이름</th>
+            <td>{{ person.username }}</td>
+          </tr>
+          <tr>
+            <th scope="row">이메일</th>
+            <td>{{ person.email }}</td>
+          </tr>
+          <tr>
+            <th scope="row">성</th>
+            <td>{{ person.last_name }}</td>
+          </tr>
+          <tr>
+            <th scope="row">이름</th>
+            <td>{{ person.first_name }}</td>
+          </tr>
+          <tr>
+            <th scope="row">생년월일</th>
+            <td>{{ person.birthday }}</td>
+          </tr>
+          <tr>
+            <th scope="row">마지막 로그인</th>
+            <td>{{ person.last_login }}</td>
+          </tr>
+          <tr>
+            <th scope="row">가입일</th>
+            <td>{{ person.date_joined }}</td>
+          </tr>
+          <tr>
+            <td class="border-0"></td>
+            <td class="border-0">
+              <div class="text-end">
+                {% if user == person %}
+                <form action="{% url 'accounts:delete' %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">회원탈퇴</button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-{% endblock content %}  
+{% endblock content %}
