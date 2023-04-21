@@ -89,10 +89,27 @@ class CustomUserChangeForm(UserChangeForm):
             }
         ),
     )
+    profile_image = forms.ImageField(
+        widget=forms.ClearableFileInput(
+            attrs={
+                'class': 'form-control',
+            }
+        ),
+        required=False
+    )
+    birthday = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date',
+            }
+        ),
+        required=False
+    )
     password = None
     class Meta(UserChangeForm.Meta):
         model = get_user_model()
-        fields= ('email', 'last_name',)
+        fields= ('email', 'last_name', 'profile_image', 'birthday',)
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):

@@ -45,12 +45,20 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
     
     def select1_count(self):
-        total = (self.select1_users.count() + self.select2_users.count())
-        return self.select1_users.count() / total * 100
+        try:
+            total = (self.select1_users.count() + self.select2_users.count())
+            return self.select1_users.count() / total * 100
+        except:
+            return 0
+            
+    
     
     def select2_count(self):
-        total = (self.select1_users.count() + self.select2_users.count())
-        return self.select2_users.count() / total * 100
+        try:
+            total = (self.select1_users.count() + self.select2_users.count())
+            return self.select2_users.count() / total * 100
+        except:
+            return 0
         
     
     @property

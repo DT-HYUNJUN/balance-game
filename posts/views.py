@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from .forms import PostForm, CommentForm
 from .models import Post, Comment
 from django.contrib.auth.decorators import login_required
@@ -7,8 +8,14 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def index(request):
     posts = Post.objects.all().order_by('-pk')
+    page = request.GET.get('page', '1')
+    per_page = 6
+    paginator = Paginator(posts, per_page)
+    last_page = paginator.num_pages
+    page_obj = paginator.get_page(page)
     context = {
-        'posts': posts,
+        'last_page': last_page,
+        'posts': page_obj,
     }
     return render(request, 'posts/index.html', context)
 

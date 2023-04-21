@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
+{% comment %} {% extends 'base.html' %}
 
 {% block content %}
 
-<a class="btn btn-secondary" href="{% url 'accounts:update' %}">수정</a>
-<a class="btn btn-secondary" href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
+
 <a class="btn btn-danger" href="{% url 'accounts:delete' %}">회원탈퇴</a>
 
 {{ person.username }}Page
@@ -19,15 +20,123 @@
   <form action="{% url 'accounts:follow' person.username %}" method="POST">
   {% csrf_token %}
   {% if request.user in person.followers.all %}
-    <input type="submit" value="unfollow">
+    <button class="btn btn-link" type="submit">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1Zm0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+        <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+      </svg>
+    </button>
   {% else %}
     {% if request.user.is_authenticated %}
-      <input type="submit" value="follow">
+    <button class="btn btn-link" type="submit">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+        <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
+      </svg>
+    </button>
     {% else %}
-      <input type="submit" value="follow" disabled>
+    <button class="btn btn-link" disabled>
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="grey" class="bi bi-person" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+      </svg>
+    </button>
     {% endif %}
   {% endif %}
   </form>
 {% endif %}
 
-{% endblock content %}
+
+
+
+
+
+<button type="button" class="btn profile_follw_btn position-relative pt-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#follower" aria-controls="offcanvasExample">
+  Follower
+<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger pt-2">
+  {{ person.followers.all|length }}
+</span>
+</button>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="follower" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <h3 class="offcanvas-title" id="offcanvasExampleLabel" style="color:#1A6ED8;">{{ person.username }}님의 Follower</h3>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class='d-flex m-3'>
+      {% for follower in person.followers.all %}
+      <div class='m-2'>
+        <a href="{% url 'accounts:profile' follower.username %}">
+          <p>{{ follower.username }}</p>
+        </a>
+      </div>
+      {% empty %}
+        <P>Follower가 없습니다.</P>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock content %} {% endcomment %}
+
+
+{% block content %}
+<div class='d-flex flex-column align-items-center pt-5'>
+  <!--프로필 이미지-->
+  <div class="profile-image rounded-circle mb-2">
+    {% if person.profile_image %}
+      <img src="{{ person.profile_image.url }}" alt="profile_image" class="object-fit-fill profile">
+    {% else %}
+      <img src="{% static 'img/img-profile-none-bg.png' %}" alt="profile_image_none" class="profile">
+    {% endif %}
+  </div>
+
+  <a class="btn btn-secondary" href="{% url 'accounts:update' %}">수정</a>
+  <a class="btn btn-secondary" href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
+
+  <div class="mt-5">
+    <table id="detail" class="table">    
+      <tbody>
+        <tr>
+          <th scope="row">유저 이름</th>
+          <td>{{ person.username }}</td>
+        </tr>
+        <tr>
+          <th scope="row">이메일</th>
+          <td>{{ person.email }}</td>
+        </tr>
+        <tr>
+          <th scope="row">성</th>
+          <td>{{ person.last_name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">이름</th>
+          <td>{{ person.first_name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">생년월일</th>
+          <td>{{ person.birthday }}</td>
+        </tr>
+        <tr>
+          <th scope="row">마지막 로그인</th>
+          <td>{{ person.last_login }}</td>
+        </tr>
+        <tr>
+          <th scope="row">가입일</th>
+          <td>{{ person.date_joined }}</td>
+        </tr>
+        <tr>
+          <td class="border-0"></td>
+          <td class="border-0">
+            <div class="text-end">
+              {% if user == person %}
+              <form action="{% url 'accounts:delete' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">회원탈퇴</button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}  

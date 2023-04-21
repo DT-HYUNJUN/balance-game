@@ -3,7 +3,6 @@
 
 {% block content %}
 <div id="post-detail">
-  <!--좋아요-->
   <!--본문-->
   <div class="">
     <h1 class="text-center">{{ post.title }}</h1>
@@ -64,12 +63,12 @@
       <form action="{% url 'posts:answer' post.pk post.select1_content %}" method = "POST">
         {% csrf_token %}
         {% if post.image1 %}
-        <button id="select" {% if user in post.select2_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+        <button id="select" {% if user in post.select2_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{{ post.image1.url }}" alt="">
           <span class="content">{{ post.select1_content }}</span>
         </button>
         {% else %}
-        <button id="select" {% if user in post.select2_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+        <button id="select" {% if user in post.select2_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{% static 'img/no-image.png' %}" alt="">
           <span class="content">{{ post.select1_content }}</span>
         </button>
@@ -79,12 +78,12 @@
       <form action="{% url 'posts:answer' post.pk post.select2_content %}" method = "POST">
         {% csrf_token %}
         {% if post.image2 %}
-        <button {% if user in post.select1_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+        <button {% if user in post.select1_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{{ post.image2.url }}" alt="">
           <span class="content">{{ post.select2_content }}</span>
         </button>
         {% else %}
-        <button {% if user in post.select1_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+        <button {% if user in post.select1_users.all  %} class="bg-transparent blur border-0 position-relative" {% else %} class="bg-transparent border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
           <img src="{% static 'img/no-image.png' %}" alt="">
           <span class="content">{{ post.select2_content }}</span>
         </button>

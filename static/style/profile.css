@@ -1,0 +1,11 @@
+.profile-image {
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  line-height: 200px;
+  overflow: hidden;
+}
+.profile {
+  width: 200px;
+  height: 200px;
+}
