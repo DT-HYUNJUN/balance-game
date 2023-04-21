@@ -1,0 +1,32 @@
+#post-detail img {
+  width: 35rem;
+  height: 40rem;
+}
+
+.vs {
+  width: 17.5rem !important;
+  height: 19rem !important;
+}
+
+.content {
+  /* position-absolute top-100 start-50 translate-middle */
+  background-color: black;
+  color: white;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform : translate(-50%, -50%);
+  font-size: xx-large;
+}
+
+.blur {
+  filter: blur(4px);
+}
+
+.selected {
+  border: 1px solid #ffd700;
+}
+
+.bar {
+  width: 71rem;
+}

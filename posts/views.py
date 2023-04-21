@@ -34,8 +34,11 @@ def create(request):
 def detail(request, post_pk):
     post = Post.objects.get(pk=post_pk)
     comments = post.comment_set.all()
+    
     comment_form = CommentForm()
     context = {
+        'res1': post.select1_count(),
+        'res2': post.select2_count(),
         'comments': comments,
         'post': post,
         'comment_form': comment_form,

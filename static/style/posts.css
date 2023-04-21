@@ -7,5 +7,5 @@
 } */
 
 .mouse:hover {
-  box-shadow: 5px 5px 10px 1px red !important;
+  box-shadow: 5px 5px 10px 1px #ffd700 !important;
 }

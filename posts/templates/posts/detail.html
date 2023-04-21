@@ -1,63 +1,128 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<a href="{% url 'posts:index' %}">home</a>
-<a href="{% url 'accounts:profile' post.user.username %}" >{{post.user.username}}</a>
-{{ post.select1_content }} vs {{ post.select2_content }}
-
-{% if user in post.select1_users.all or user in post.select2_users.all  %}
-
-<input type="submit" value="{{ post.select1_content }} {{post.select1_users.all|length}}" disabled> 
-<input type="submit" value="{{ post.select2_content }} {{post.select2_users.all|length}}" disabled>
-
-{% else %}
-<form action="{% url 'posts:answer' post.pk post.select1_content %}" method = "POST">
-  {% csrf_token %}
-  <input type="submit" value="{{ post.select1_content }}">
-
-</form>
-
-<form action="{% url 'posts:answer' post.pk post.select2_content %}" method = "POST">
-  {% csrf_token %}
-  <input type="submit" value="{{ post.select2_content }}">
-</form>
-{% endif %}
-<form action="{% url 'posts:likes' post.pk %}" method="POST">
-  {% csrf_token %}
-  {% if request.user in post.like_users.all %}
-  <input type="submit" value="좋아요 취소">
-  {% else %}
-  <input type="submit" value="좋아요">
-  {% endif %}
-  <p>{{ post.like_users.count }}명이 좋아합니다.</p>
-</form>
-
-<a href="{% url 'posts:delete' post.pk %}">삭제</a>
-<a href="{% url 'posts:update' post.pk %}">수정</a>
-
-<span>댓글 {{ comments|length }}</span>
-
-<form action="{% url 'posts:comment_create' post.pk %}" method="POST">
-  {% csrf_token %}
-  {% for field in comment_form %}
-    <div class="input-group mb-3">
-      {{ field }}
+<div id="post-detail">
+  <!--좋아요-->
+  <!--본문-->
+  <div class="">
+    <h1 class="text-center">{{ post.title }}</h1>
+    <div class="d-flex flex-column align-items-end gap-2">
+      <div>
+        <a href="{% url 'posts:index' %}">목록</a>
+        {% if request.user == post.user %}
+        <a class="mx-2" href="{% url 'posts:delete' post.pk %}">삭제</a>
+        <a href="{% url 'posts:update' post.pk %}">수정</a>
+        {% endif %}
+      </div>
+      <div>작성 일자 : {{ post.created_at|date:'Y-m-d' }}</div>
+      <div>
+        작성자 : 
+        <a href="{% url 'accounts:profile' post.user.username %}">{{ post.user.username }}</a>
+      </div>
+      <form action="{% url 'posts:likes' post.pk %}" method="POST">
+        {% csrf_token %}
+        <div class="d-flex align-items-center">
+          <div>
+            {% if request.user.is_authenticated %}
+              {% if request.user in post.like_users.all %}
+              <button id="select" class="btn btn-link text-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                  <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
+                </svg>
+              </button>
+              {% else %}
+              <button id="select" class="btn btn-link text-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                  <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+                </svg>
+              </button>
+              {% endif %}
+            {% else %}
+            <button class="btn btn-link text-danger" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                <path d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>
+              </svg>
+            </button>
+            {% endif %}
+          </div>
+          <div>{{ post.like_users.count }}</div>
+        </div>
+      </form>
     </div>
-    {% endfor %}
-  <input type="submit" value="등록">
-</form>
-
-{% for comment in comments %}
-  <div class="d-flex align-items-center">
-    <span>{{ comment.user }} - {{ comment.content }}</span>
-    {% if request.user == comment.user %}
-    <form action="{% url 'posts:comment_delete' post.pk comment.pk %}" method="POST">
-      {% csrf_token %}
-      <input class="border-0 bg-transparent text-danger" type="submit" value="X">
-    </form>
+    {% if user in post.select1_users.all or user in post.select2_users.all  %}
+    <div class="progress-stacked bar mx-auto mb-3" style="height: 30px;">
+      <div class="progress" role="progressbar" aria-label="Segment one" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ res1 }}%; height: 30px;">
+        <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated fs-5">{{ post.select1_users.all|length }} ({{ res1 }}) %</div>
+      </div>
+      <div class="progress" role="progressbar" aria-label="Segment two" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ res2 }}%; height: 30px;">
+        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated fs-5">{{ post.select2_users.all|length }} ({{ res2 }}) %</div>
+      </div>
+    </div>
     {% endif %}
+    <div class="d-flex  justify-content-center position-relative">
+      <form action="{% url 'posts:answer' post.pk post.select1_content %}" method = "POST">
+        {% csrf_token %}
+        {% if post.image1 %}
+        <button id="select" {% if user in post.select2_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+          <img src="{{ post.image1.url }}" alt="">
+          <span class="content">{{ post.select1_content }}</span>
+        </button>
+        {% else %}
+        <button id="select" {% if user in post.select2_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+          <img src="{% static 'img/no-image.png' %}" alt="">
+          <span class="content">{{ post.select1_content }}</span>
+        </button>
+        {% endif %}
+      </form>
+      <img class="vs z-3 position-absolute top-50 start-50 translate-middle" src="{% static 'img/vs.png' %}" alt="vs">
+      <form action="{% url 'posts:answer' post.pk post.select2_content %}" method = "POST">
+        {% csrf_token %}
+        {% if post.image2 %}
+        <button {% if user in post.select1_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+          <img src="{{ post.image2.url }}" alt="">
+          <span class="content">{{ post.select2_content }}</span>
+        </button>
+        {% else %}
+        <button {% if user in post.select1_users.all  %} class="blur border-0 position-relative" {% else %} class="border-0 position-relative" {% endif %} type="submit" {% if user in post.select1_users.all or user in post.select2_users.all  %} disabled {% endif %}>
+          <img src="{% static 'img/no-image.png' %}" alt="">
+          <span class="content">{{ post.select2_content }}</span>
+        </button>
+        {% endif %}
+      </form>
+    </div>
+    <p class="text-center mt-3 fs-4">{{ post.content }}</p>
   </div>
 
-{% endfor %}
+  <p class="mb-2 fs-5">댓글 ({{ comments|length }})</p>
+  
+  <form action="{% url 'posts:comment_create' post.pk %}" method="POST">
+    {% csrf_token %}
+    {% for field in comment_form %}
+      <div class="input-group mb-3">
+        {{ field }}
+        <button class="btn btn-outline-primary">등록</button>
+      </div>
+      {% endfor %}
+  </form>
+  
+  {% for comment in comments %}
+    <div class="d-flex align-items-center justify-content-between">
+      <span>{{ comment.user }} - {{ comment.content }}</span>
+      <div class="d-flex align-items-center">
+        <span class="text-secondary">{{ comment.created_string }}</span>
+        <!--삭제-->
+        {% if request.user == comment.user %}
+        <form action="{% url 'posts:comment_delete' post.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input class="border-0 bg-transparent text-danger" type="submit" value="X">
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  
+  {% endfor %}
+
+</div>
 
 {% endblock content %}

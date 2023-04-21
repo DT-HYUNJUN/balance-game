@@ -34,3 +34,13 @@ posts
       - post (F)
       - content
       - created_at
+
+## Todo
+
+페이지네이션 6개 단위
+
+마이페이지 / 수정, 비번수정 css
+
+비동기 처리
+
+선택 시 효과

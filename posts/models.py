@@ -19,6 +19,7 @@ class Post(models.Model):
 
     def post_image_path(instance, filename):
         return f'posts/{instance.pk}/{filename}'
+    
     image1 = models.ImageField(blank=True, upload_to=post_image_path)
     image2 = models.ImageField(blank=True, upload_to=post_image_path)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -43,6 +44,15 @@ class Post(models.Model):
                     os.remove(os.path.join(settings.MEDIA_ROOT, old_review.image2.name))
         super(Post, self).save(*args, **kwargs)
     
+    def select1_count(self):
+        total = (self.select1_users.count() + self.select2_users.count())
+        return self.select1_users.count() / total * 100
+    
+    def select2_count(self):
+        total = (self.select1_users.count() + self.select2_users.count())
+        return self.select2_users.count() / total * 100
+        
+    
     @property
     def created_string(self):
         time = datetime.now(tz=timezone.utc) - self.created_at
@@ -64,3 +74,19 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    @property
+    def created_string(self):
+        time = datetime.now(tz=timezone.utc) - self.created_at
+
+        if time < timedelta(minutes=1):
+            return '방금 전'
+        elif time < timedelta(hours=1):
+            return str(int(time.seconds / 60)) + '분 전'
+        elif time < timedelta(days=1):
+            return str(int(time.seconds / 3600)) + '시간 전'
+        elif time < timedelta(days=7):
+            time = datetime.now(tz=timezone.utc).date() - self.created_at.date()
+            return str(time.days) + '일 전'
+        else:
+            return self.strftime('%Y-%m-%d')
