@@ -12,7 +12,7 @@
       {% endif %}
     </div>
 
-    <form id="follow-form" data-username="{{ person.username }}">
+    <form id="follow-form" data-myname="{{ request.user.username }}" data-username="{{ person.username }}" {% if request.user.profile_image %} data-image="{{ request.user.profile_image.url }}" {% else %} data-image="{% static 'img/img-profile-none-bg.png' %}" {% endif %} >
       {% csrf_token %}
       {% if request.user != person %}
         {% if request.user in person.followers.all %}
@@ -32,11 +32,6 @@
         {% endif %}
       {% endif %}
     </form>
-    
-    
-  
-
-
 
     <div class="d-flex align-items-center gap-4 mt-3">
       <!--팔로워-->
@@ -52,9 +47,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-          <div class='d-flex m-3'>
+          <div id="follower-list" class='d-flex m-3'>
             {% for follower in person.followers.all %}
-            <div class='m-2'>
+            <!--기존 팔로워-->
+            <div id="{{ follower.username }}" class='m-2'>
               <a href="{% url 'accounts:profile' follower.username %}" class="userinfo-txt">
                 <div class="userinfo_box">
                   {% if follower.profile_image %}
@@ -66,6 +62,7 @@
                 <p class="text-center">{{ follower.username }}</p>
               </a>
             </div>
+            <!---->
             {% empty %}
               <P>Follower가 없습니다.</P>
             {% endfor %}
