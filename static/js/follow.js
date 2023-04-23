@@ -1,6 +1,7 @@
 const form = document.querySelector('#follow-form')
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 const followerList = document.querySelector('#follower-list')
+const child = followerList.querySelectorAll('div')
 
 const addFollower = (e) => {
   const myName = e.target.dataset.myname
@@ -41,6 +42,21 @@ const deleteFollower = (e) => {
   followerList.removeChild(follower)
 }
 
+const removeNo = () => {
+  if (child.length === 0) {
+    const noFollowers = followerList.querySelector('p')
+    followerList.removeChild(noFollowers)
+  }
+}
+
+const addNo = () => {
+  if (child.length === 0) {
+    const addNoFollowers = document.createElement('p')
+    addNoFollowers.textContent = 'Follower가 없습니다.'
+    followerList.appendChild(addNoFollowers)
+  }
+}
+
 const formEvent = (e) => {
   e.preventDefault()
   const username = e.target.dataset.username
@@ -57,12 +73,14 @@ const formEvent = (e) => {
         const i = followBtn.querySelector('i')
         i.classList.remove('bi', 'bi-person-add')
         i.classList.add('bi', 'bi-person-dash')
+        removeNo()
         addFollower(e)
       } else {
         const i = followBtn.querySelector('i')
         i.classList.remove('bi', 'bi-person-dash')
         i.classList.add('bi', 'bi-person-add')
         deleteFollower(e)
+        addNo()
       }
 
       const followingsCountTag = document.querySelector('#followings-count')
